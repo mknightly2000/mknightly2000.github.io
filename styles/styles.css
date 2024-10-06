@@ -1,0 +1,14 @@
+html, body {
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.main-container {
+    width: 1000px;
+    padding: 0 30px
+}
