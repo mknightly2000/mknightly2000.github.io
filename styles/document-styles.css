@@ -1,0 +1,16 @@
+h2 {
+    font-size: 1.5rem;
+}
+
+h2, h3, h4, h5, h6 {
+    padding: 15px 0;
+    font-weight: bold;
+}
+
+p {
+    line-height: 1.7;
+}
+
+hr {
+    margin: 20px 0;
+}
