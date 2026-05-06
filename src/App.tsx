@@ -15,25 +15,28 @@ import SkillDetail from "./pages/SkillDetail.tsx";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/projects" element={<AllProjects />} />
-          <Route path="/projects/:slug" element={<ProjectDetail />} />
-          <Route path="/work/:slug" element={<WorkDetail />} />
-          <Route path="/education/:slug" element={<EducationDetail />} />
-          <Route path="/skills" element={<Skills />} />
-          <Route path="/skills/:slug" element={<SkillDetail />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/projects" element={<AllProjects />} />
+                    <Route path="/projects/:slug" element={<ProjectDetail />} />
+                    <Route path="/work/:slug" element={<WorkDetail />} />
+                    <Route
+                        path="/education/:slug"
+                        element={<EducationDetail />}
+                    />
+                    <Route path="/skills" element={<Skills />} />
+                    <Route path="/skills/:slug" element={<SkillDetail />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </BrowserRouter>
+        </TooltipProvider>
+    </QueryClientProvider>
 );
 
 export default App;
