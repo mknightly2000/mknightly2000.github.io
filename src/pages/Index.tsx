@@ -14,34 +14,43 @@ import ProjectCard from "@/components/ProjectCard";
 import { projects, workHistory, education } from "@/data/projects";
 
 const Index = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<Record<string, string>>({});
 
     const fetchData = async () => {
-        const { data, error } = await supabase
-            .from("site_settings")
-            .select("title, content");
+        try {
+            const { data, error } = await supabase
+                .from("site_settings")
+                .select("title, content");
 
-        if (error) {
-            console.error("Error fetching data:", error);
-            return;
-        }
+            if (error) {
+                console.error("Error fetching data:", error);
+                return;
+            }
 
-        if (data) {
-            const formattedData = data.reduce(
-                (acc: Record<string, string>, item) => {
-                    acc[item.title] = String(item.content);
-                    return acc;
-                },
-                {}
-            );
+            if (data) {
+                const formattedData = data.reduce(
+                    (acc: Record<string, string>, item) => {
+                        acc[item.title] = String(item.content);
+                        return acc;
+                    },
+                    {}
+                );
 
-            setData((prev) => ({ ...prev, ...formattedData }));
+                setData((prev) => ({ ...prev, ...formattedData }));
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    if (isLoading) {
+        return <div></div>;
+    }
 
     return (
         <div className="min-h-screen bg-background">
