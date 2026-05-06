@@ -98,7 +98,7 @@ const Index = () => {
                             <Linkedin className="h-4 w-4" /> LinkedIn
                         </a>
                         <a
-                            href="#"
+                            href={data.resume_url || "#"}
                             className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-all hover:bg-primary-glow"
                         >
                             <FileDown className="h-4 w-4" /> Resume
@@ -272,13 +272,13 @@ const Index = () => {
                             <Mail className="h-4 w-4" /> Email
                         </a>
                         <a
-                            href="#"
+                            href={data.resume_url || "#"}
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
                         >
                             <FileDown className="h-4 w-4" /> Resume
                         </a>
                         <a
-                            href="#"
+                            href={data.cv_url || "#"}
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
                         >
                             <FileText className="h-4 w-4" /> CV
