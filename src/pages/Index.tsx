@@ -266,7 +266,7 @@ const Index = () => {
                             <Linkedin className="h-4 w-4" /> LinkedIn
                         </a>
                         <a
-                            href="mailto:hello@example.com"
+                            href={data.email ? `mailto:${data.email}` : "#"}
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
                         >
                             <Mail className="h-4 w-4" /> Email
@@ -294,13 +294,17 @@ const Index = () => {
                         © {new Date().getFullYear()} Michael Knightly. Built
                         with care.
                     </div>
-                    <a
-                        href="mailto:hello@example.com"
-                        className="group inline-flex items-center gap-1.5 text-sm text-foreground transition-colors hover:text-primary"
-                    >
-                        hello@example.com
-                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </a>
+                    {data.email ? (
+                        <a
+                            href={`mailto:${data.email}`}
+                            className="group inline-flex items-center gap-1.5 text-sm text-foreground transition-colors hover:text-primary"
+                        >
+                            {data.email}
+                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                        </a>
+                    ) : (
+                        ""
+                    )}
                 </div>
             </footer>
         </div>
