@@ -82,7 +82,7 @@ const Index = () => {
 
                     <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                         <a
-                            href="https://github.com"
+                            href={data.github_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -90,7 +90,7 @@ const Index = () => {
                             <Github className="h-4 w-4" /> GitHub
                         </a>
                         <a
-                            href="https://linkedin.com"
+                            href={data.linkedin_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -250,7 +250,7 @@ const Index = () => {
                     </h2>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                         <a
-                            href="https://github.com"
+                            href={data.github_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -258,7 +258,7 @@ const Index = () => {
                             <Github className="h-4 w-4" /> GitHub
                         </a>
                         <a
-                            href="https://linkedin.com"
+                            href={data.linkedin_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
