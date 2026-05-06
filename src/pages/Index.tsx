@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { Link } from "react-router-dom";
 import {
     Github,
@@ -12,6 +14,35 @@ import ProjectCard from "@/components/ProjectCard";
 import { projects, workHistory, education } from "@/data/projects";
 
 const Index = () => {
+    const [data, setData] = useState<Record<string, string>>({});
+
+    const fetchData = async () => {
+        const { data, error } = await supabase
+            .from("site_settings")
+            .select("title, content");
+
+        if (error) {
+            console.error("Error fetching data:", error);
+            return;
+        }
+
+        if (data) {
+            const formattedData = data.reduce(
+                (acc: Record<string, string>, item) => {
+                    acc[item.title] = String(item.content);
+                    return acc;
+                },
+                {}
+            );
+
+            setData((prev) => ({ ...prev, ...formattedData }));
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <div className="min-h-screen bg-background">
             <SiteHeader />
@@ -28,21 +59,16 @@ const Index = () => {
                         Hello, I'm
                     </p>
                     <h1 className="mt-3 text-balance text-5xl font-semibold tracking-tight sm:text-7xl">
-                        Michael <span className="text-inherit">Knightly</span>
+                        {data.name}
                     </h1>
-                    <p className="mt-4 font-mono text-sm text-muted-foreground sm:text-base">
-                        <span className="text-foreground/80">
-                            software developer
-                        </span>
-                        <span className="mx-2 text-border-strong">/</span>
-                        <span className="text-foreground/80">
-                            ai researcher
-                        </span>
-                    </p>
+                    <p
+                        className="mt-4 font-mono text-sm text-muted-foreground sm:text-base"
+                        dangerouslySetInnerHTML={{
+                            __html: data.hero_role || ""
+                        }}
+                    />
                     <p className="mx-auto mt-8 max-w-xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
-                        I build thoughtful tools at the intersection of design
-                        and machine learning — from native iOS apps to retrieval
-                        systems for production LLMs.
+                        {data.hero_description}
                     </p>
 
                     <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
