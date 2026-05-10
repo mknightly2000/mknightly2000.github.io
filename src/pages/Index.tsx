@@ -291,8 +291,8 @@ const Index = () => {
             <footer className="border-t border-border/60">
                 <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 py-10 sm:flex-row sm:items-center">
                     <div className="font-mono text-xs text-muted-foreground">
-                        © {new Date().getFullYear()} Michael Knightly. Built
-                        with care.
+                        © {new Date().getFullYear()} {data.name}. Built with
+                        care.
                     </div>
                     {data.email ? (
                         <a
