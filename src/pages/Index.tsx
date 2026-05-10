@@ -62,7 +62,7 @@ const Index = () => {
                 <div className="relative mx-auto max-w-3xl px-6 py-24 text-center sm:py-32">
                     <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1 font-mono text-xs text-muted-foreground">
                         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
-                        Open to new opportunities
+                        {data.status_phrase}
                     </div>
                     <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">
                         Hello, I'm
