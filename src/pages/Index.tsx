@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { Link } from "react-router-dom";
 import {
     Github,
@@ -12,6 +14,44 @@ import ProjectCard from "@/components/ProjectCard";
 import { projects, workHistory, education } from "@/data/projects";
 
 const Index = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState<Record<string, string>>({});
+
+    const fetchData = async () => {
+        try {
+            const { data, error } = await supabase
+                .from("site_settings")
+                .select("title, content");
+
+            if (error) {
+                console.error("Error fetching data:", error);
+                return;
+            }
+
+            if (data) {
+                const formattedData = data.reduce(
+                    (acc: Record<string, string>, item) => {
+                        acc[item.title] = String(item.content);
+                        return acc;
+                    },
+                    {}
+                );
+
+                setData((prev) => ({ ...prev, ...formattedData }));
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (isLoading) {
+        return <div></div>;
+    }
+
     return (
         <div className="min-h-screen bg-background">
             <SiteHeader />
@@ -22,32 +62,27 @@ const Index = () => {
                 <div className="relative mx-auto max-w-3xl px-6 py-24 text-center sm:py-32">
                     <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-3 py-1 font-mono text-xs text-muted-foreground">
                         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
-                        Open to new opportunities
+                        {data.status_phrase}
                     </div>
                     <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">
                         Hello, I'm
                     </p>
                     <h1 className="mt-3 text-balance text-5xl font-semibold tracking-tight sm:text-7xl">
-                        Michael <span className="text-inherit">Knightly</span>
+                        {data.name}
                     </h1>
-                    <p className="mt-4 font-mono text-sm text-muted-foreground sm:text-base">
-                        <span className="text-foreground/80">
-                            software developer
-                        </span>
-                        <span className="mx-2 text-border-strong">/</span>
-                        <span className="text-foreground/80">
-                            ai researcher
-                        </span>
-                    </p>
+                    <p
+                        className="mt-4 font-mono text-sm text-muted-foreground sm:text-base"
+                        dangerouslySetInnerHTML={{
+                            __html: data.hero_role || ""
+                        }}
+                    />
                     <p className="mx-auto mt-8 max-w-xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
-                        I build thoughtful tools at the intersection of design
-                        and machine learning — from native iOS apps to retrieval
-                        systems for production LLMs.
+                        {data.hero_description}
                     </p>
 
                     <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                         <a
-                            href="https://github.com"
+                            href={data.github_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -55,7 +90,7 @@ const Index = () => {
                             <Github className="h-4 w-4" /> GitHub
                         </a>
                         <a
-                            href="https://linkedin.com"
+                            href={data.linkedin_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -63,7 +98,7 @@ const Index = () => {
                             <Linkedin className="h-4 w-4" /> LinkedIn
                         </a>
                         <a
-                            href="#"
+                            href={data.resume_url || "#"}
                             className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-all hover:bg-primary-glow"
                         >
                             <FileDown className="h-4 w-4" /> Resume
@@ -215,7 +250,7 @@ const Index = () => {
                     </h2>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                         <a
-                            href="https://github.com"
+                            href={data.github_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -223,7 +258,7 @@ const Index = () => {
                             <Github className="h-4 w-4" /> GitHub
                         </a>
                         <a
-                            href="https://linkedin.com"
+                            href={data.linkedin_url || "#"}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
@@ -231,19 +266,19 @@ const Index = () => {
                             <Linkedin className="h-4 w-4" /> LinkedIn
                         </a>
                         <a
-                            href="mailto:hello@example.com"
+                            href={data.email ? `mailto:${data.email}` : "#"}
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
                         >
                             <Mail className="h-4 w-4" /> Email
                         </a>
                         <a
-                            href="#"
+                            href={data.resume_url || "#"}
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
                         >
                             <FileDown className="h-4 w-4" /> Resume
                         </a>
                         <a
-                            href="#"
+                            href={data.cv_url || "#"}
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-secondary/70"
                         >
                             <FileText className="h-4 w-4" /> CV
@@ -256,16 +291,20 @@ const Index = () => {
             <footer className="border-t border-border/60">
                 <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 py-10 sm:flex-row sm:items-center">
                     <div className="font-mono text-xs text-muted-foreground">
-                        © {new Date().getFullYear()} Michael Knightly. Built
-                        with care.
+                        © {new Date().getFullYear()} {data.name}. Built with
+                        care.
                     </div>
-                    <a
-                        href="mailto:hello@example.com"
-                        className="group inline-flex items-center gap-1.5 text-sm text-foreground transition-colors hover:text-primary"
-                    >
-                        hello@example.com
-                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </a>
+                    {data.email ? (
+                        <a
+                            href={`mailto:${data.email}`}
+                            className="group inline-flex items-center gap-1.5 text-sm text-foreground transition-colors hover:text-primary"
+                        >
+                            {data.email}
+                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                        </a>
+                    ) : (
+                        ""
+                    )}
                 </div>
             </footer>
         </div>
