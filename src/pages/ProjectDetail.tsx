@@ -9,11 +9,54 @@ import {
 import SiteHeader from "@/components/SiteHeader";
 import LanguageBar from "@/components/LanguageBar";
 import TagPill from "@/components/TagPill";
-import { projects } from "@/data/projects";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+const getIcon = (iconName: string) => {
+    switch (iconName?.toLowerCase()) {
+        case "github":
+            return <Github className="h-4 w-4" />;
+        case "apple":
+            return <Apple className="h-4 w-4" />;
+        case "android":
+            return <Smartphone className="h-4 w-4" />;
+        default:
+            return <ExternalLink className="h-4 w-4" />;
+    }
+};
 
 const ProjectDetail = () => {
     const { slug } = useParams();
-    const project = projects.find((p) => p.slug === slug);
+
+    const [project, setProject] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProject = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("projects")
+                    .select("*")
+                    .eq("slug", slug)
+                    .single();
+
+                if (error) throw error;
+                if (data) setProject(data);
+            } catch (error) {
+                console.error("Error fetching project:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (slug) {
+            fetchProject();
+        }
+    }, [slug]);
+
+    if (isLoading) {
+        return <div></div>;
+    }
 
     if (!project) {
         return (
@@ -57,20 +100,20 @@ const ProjectDetail = () => {
                         </span>
                         <span className="h-px w-8 bg-border" />
                         <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                            case study
+                            {project.type}
                         </span>
                     </div>
                     <h1 className="mt-3 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
                         {project.title}
                     </h1>
                     <p className="mt-3 max-w-2xl text-balance text-lg text-muted-foreground">
-                        {project.tagline}
+                        {project.short_description}
                     </p>
                 </header>
 
                 <div className="mt-10 overflow-hidden rounded-2xl border border-border bg-card">
                     <img
-                        src={project.image}
+                        src={project.image_url}
                         alt={`${project.title} hero`}
                         width={1280}
                         height={800}
@@ -85,53 +128,21 @@ const ProjectDetail = () => {
                             overview
                         </h2>
                         <p className="mt-3 text-base leading-relaxed text-foreground/90">
-                            {project.overview}
+                            {project.long_description}
                         </p>
 
                         <div className="mt-10 flex flex-wrap gap-3">
-                            {project.links.github && (
+                            {project.links?.map((link: any, index: number) => (
                                 <a
-                                    href={project.links.github}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-all hover:bg-primary-glow"
-                                >
-                                    <Github className="h-4 w-4" /> View on
-                                    GitHub
-                                </a>
-                            )}
-                            {project.links.demo && (
-                                <a
-                                    href={project.links.demo}
+                                    key={index}
+                                    href={link.url}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium transition-all hover:border-border-strong"
                                 >
-                                    <ExternalLink className="h-4 w-4" /> Live
-                                    Demo
+                                    {getIcon(link.icon_name)} {link.title}
                                 </a>
-                            )}
-                            {project.links.appStore && (
-                                <a
-                                    href={project.links.appStore}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium transition-all hover:border-border-strong"
-                                >
-                                    <Apple className="h-4 w-4" /> App Store
-                                </a>
-                            )}
-                            {project.links.playStore && (
-                                <a
-                                    href={project.links.playStore}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium transition-all hover:border-border-strong"
-                                >
-                                    <Smartphone className="h-4 w-4" /> Google
-                                    Play
-                                </a>
-                            )}
+                            ))}
                         </div>
                     </section>
 
@@ -142,31 +153,20 @@ const ProjectDetail = () => {
                                 tech stack
                             </h3>
                             <div className="mt-3 flex flex-wrap gap-1.5">
-                                {project.stack.map((s) => (
+                                {project.tech_stack?.map((s) => (
                                     <TagPill key={s}>{s}</TagPill>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="rounded-2xl border border-border bg-card p-5">
-                            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                                languages
-                            </h3>
-                            <div className="mt-4">
-                                <LanguageBar languages={project.languages} />
-                            </div>
-                        </div>
-
-                        <div className="rounded-2xl border border-border bg-card p-5">
-                            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                                tags
-                            </h3>
-                            <div className="mt-3 flex flex-wrap gap-1.5">
-                                {project.tags.map((t) => (
-                                    <TagPill key={t}>{t}</TagPill>
-                                ))}
-                            </div>
-                        </div>
+                        {/*<div className="rounded-2xl border border-border bg-card p-5">*/}
+                        {/*    <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">*/}
+                        {/*        languages*/}
+                        {/*    </h3>*/}
+                        {/*    <div className="mt-4">*/}
+                        {/*        {<LanguageBar languages={project.languages} />}*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                     </aside>
                 </div>
 
