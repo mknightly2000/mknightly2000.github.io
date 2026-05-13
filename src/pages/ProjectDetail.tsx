@@ -159,14 +159,14 @@ const ProjectDetail = () => {
                             </div>
                         </div>
 
-                        {/*<div className="rounded-2xl border border-border bg-card p-5">*/}
-                        {/*    <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">*/}
-                        {/*        languages*/}
-                        {/*    </h3>*/}
-                        {/*    <div className="mt-4">*/}
-                        {/*        {<LanguageBar languages={project.languages} />}*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                        <div className="rounded-2xl border border-border bg-card p-5">
+                            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                                languages
+                            </h3>
+                            <div className="mt-4">
+                                {<LanguageBar languages={project.languages} />}
+                            </div>
+                        </div>
                     </aside>
                 </div>
 
