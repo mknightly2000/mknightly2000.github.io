@@ -3,31 +3,66 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Search } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import ProjectCard from "@/components/ProjectCard";
-import { projects } from "@/data/projects";
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 const AllProjects = () => {
+    const [projects, setProjects] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     const [query, setQuery] = useState("");
     const [activeTag, setActiveTag] = useState<string | null>(null);
 
     const allTags = useMemo(() => {
         const set = new Set<string>();
-        projects.forEach((p) => p.tags.forEach((t) => set.add(t)));
+        projects.forEach((p) => {
+            // Defensive coding: use ?. in case a project has no tech stack
+            p.tech_stack?.forEach((t: string) => set.add(t));
+        });
         return Array.from(set).sort();
-    }, []);
+    }, [projects]);
 
     const filtered = useMemo(() => {
         return projects.filter((p) => {
             const matchesQuery =
                 !query ||
                 p.title.toLowerCase().includes(query.toLowerCase()) ||
-                p.description.toLowerCase().includes(query.toLowerCase()) ||
-                p.tags.some((t) =>
+                p.short_description
+                    ?.toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                p.tech_stack?.some((t: string) =>
                     t.toLowerCase().includes(query.toLowerCase())
                 );
-            const matchesTag = !activeTag || p.tags.includes(activeTag);
+
+            const matchesTag = !activeTag || p.tech_stack?.includes(activeTag);
+
             return matchesQuery && matchesTag;
         });
-    }, [query, activeTag]);
+    }, [projects, query, activeTag]);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("projects")
+                    .select("*")
+                    .order("title"); // Organizes them alphabetically
+
+                if (error) throw error;
+                if (data) setProjects(data);
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
+    if (isLoading) {
+        return <div></div>;
+    }
 
     return (
         <div className="min-h-screen bg-background">

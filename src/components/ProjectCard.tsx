@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
-import { Project } from "@/data/projects";
 import LanguageBar from "./LanguageBar";
 import TagPill from "./TagPill";
 
 interface Props {
-    project: Project;
+    project: any;
     featured?: boolean;
 }
 
@@ -21,7 +20,7 @@ const ProjectCard = ({ project, featured = false }: Props) => {
                 className={`relative overflow-hidden bg-secondary ${featured ? "aspect-[16/9]" : "aspect-[4/3]"}`}
             >
                 <img
-                    src={project.image}
+                    src={project.image_url}
                     alt={`${project.title} preview`}
                     loading="lazy"
                     width={1280}
@@ -43,14 +42,14 @@ const ProjectCard = ({ project, featured = false }: Props) => {
                             </span>
                         </div>
                         <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                            {project.description}
+                            {project.short_description}
                         </p>
                     </div>
                     <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
                 </div>
 
                 <div className="flex flex-wrap gap-1.5">
-                    {project.tags.slice(0, 4).map((t) => (
+                    {project.tech_stack?.slice(0, 4).map((t: string) => (
                         <TagPill key={t}>{t}</TagPill>
                     ))}
                 </div>
