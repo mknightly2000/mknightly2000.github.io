@@ -124,7 +124,7 @@ const ProjectDetail = () => {
                         {project.title}
                     </h1>
                     <p className="mt-3 max-w-2xl text-balance text-lg text-muted-foreground">
-                        {project.short_description}
+                        {project.tagline}
                     </p>
                 </header>
 
