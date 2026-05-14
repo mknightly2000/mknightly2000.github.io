@@ -1,27 +1,44 @@
 import { Link, useParams } from "react-router-dom";
-import {
-    ArrowLeft,
-    Github,
-    ExternalLink,
-    Apple,
-    Smartphone
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import LanguageBar from "@/components/LanguageBar";
 import TagPill from "@/components/TagPill";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { SiGoogleplay, SiAppstore } from "react-icons/si";
+import { FiGithub, FiExternalLink } from "react-icons/fi";
+import {
+    FaFile,
+    FaFilePdf,
+    FaFileCsv,
+    FaFileCode,
+    FaDownload,
+    FaLink
+} from "react-icons/fa6";
 
 const getIcon = (iconName: string) => {
-    switch (iconName?.toLowerCase()) {
+    switch (iconName?.toLowerCase().trim()) {
         case "github":
-            return <Github className="h-4 w-4" />;
-        case "apple":
-            return <Apple className="h-4 w-4" />;
-        case "android":
-            return <Smartphone className="h-4 w-4" />;
+            return <FiGithub className="h-4 w-4" />;
+        case "app-store":
+            return <SiAppstore className="h-4 w-4" />;
+        case "google-play":
+            return <SiGoogleplay className="h-4 w-4" />;
+        case "file":
+            return <FaFile className="h-4 w-4" />;
+        case "pdf-file":
+            return <FaFilePdf className="h-4 w-4" />;
+        case "csv-file":
+            return <FaFileCsv className="h-4 w-4" />;
+        case "code-file":
+            return <FaFileCode className="h-4 w-4" />;
+        case "download":
+            return <FaDownload className="h-4 w-4" />;
+        case "external-link":
+            return <FiExternalLink className="h-4 w-4" />;
+        case "link":
         default:
-            return <ExternalLink className="h-4 w-4" />;
+            return <FaLink className="h-4 w-4" />;
     }
 };
 
