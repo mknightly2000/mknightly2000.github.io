@@ -6,12 +6,12 @@ interface Props {
 }
 
 const LanguageBar = ({ languages = {}, showLegend = true }: Props) => {
-    const languageArray = Object.entries(languages || {}).map(
-        ([name, percent]) => ({
+    const languageArray = Object.entries(languages || {})
+        .map(([name, percent]) => ({
             name,
             percent: Number(percent)
-        })
-    );
+        }))
+        .sort((a, b) => b.percent - a.percent);
 
     const getColor = (name: string) => {
         return (githubColors as Record<string, string>)[name] || "#8b949e";
