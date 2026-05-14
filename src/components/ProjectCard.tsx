@@ -37,9 +37,6 @@ const ProjectCard = ({ project, featured = false }: Props) => {
                             <h3 className="text-lg font-semibold tracking-tight text-foreground">
                                 {project.title}
                             </h3>
-                            <span className="font-mono text-[11px] text-muted-foreground">
-                                {project.year}
-                            </span>
                         </div>
                         <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                             {project.short_description}
