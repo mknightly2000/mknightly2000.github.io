@@ -11,34 +11,56 @@ import {
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import ProjectCard from "@/components/ProjectCard";
-import { projects, workHistory, education } from "@/data/projects";
+import { workHistory, education } from "@/data/projects";
 
 const Index = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<Record<string, string>>({});
+    const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
 
     const fetchData = async () => {
         try {
-            const { data, error } = await supabase
+            const settingsRequest = supabase
                 .from("site_settings")
                 .select("title, content");
 
-            if (error) {
-                console.error("Error fetching data:", error);
-                return;
-            }
+            const projectsRequest = supabase
+                .from("projects")
+                .select("*")
+                .neq("home_page_order", -1)
+                .order("home_page_order", { ascending: true });
 
-            if (data) {
-                const formattedData = data.reduce(
+            const [settingsResponse, projectsResponse] = await Promise.all([
+                settingsRequest,
+                projectsRequest
+            ]);
+
+            if (settingsResponse.error) {
+                console.error(
+                    "Error fetching settings:",
+                    settingsResponse.error
+                );
+            } else if (settingsResponse.data) {
+                const formattedData = settingsResponse.data.reduce(
                     (acc: Record<string, string>, item) => {
                         acc[item.title] = String(item.content);
                         return acc;
                     },
                     {}
                 );
-
                 setData((prev) => ({ ...prev, ...formattedData }));
             }
+
+            if (projectsResponse.error) {
+                console.error(
+                    "Error fetching projects:",
+                    projectsResponse.error
+                );
+            } else if (projectsResponse.data) {
+                setFeaturedProjects(projectsResponse.data);
+            }
+        } catch (error) {
+            console.error("Unexpected error:", error);
         } finally {
             setIsLoading(false);
         }
@@ -124,13 +146,19 @@ const Index = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {projects.map((p, i) => (
-                        <ProjectCard
-                            key={p.slug}
-                            project={p}
-                            featured={i === 0}
-                        />
-                    ))}
+                    {featuredProjects.map((p, i) => {
+                        const isOdd = featuredProjects.length % 2 !== 0;
+
+                        const isFeatured = isOdd && i === 0;
+
+                        return (
+                            <ProjectCard
+                                key={p.slug}
+                                project={p}
+                                featured={isFeatured}
+                            />
+                        );
+                    })}
                 </div>
 
                 <div className="mt-10 flex justify-center">
