@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import LanguageBar from "@/components/LanguageBar";
+import SizePill from "@/components/SizePill";
 import TagPill from "@/components/TagPill";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
@@ -165,6 +166,14 @@ const ProjectDetail = () => {
 
                     {/* Sidebar */}
                     <aside className="space-y-8 md:sticky md:top-20 md:self-start">
+                        <div className="rounded-2xl border border-border bg-card p-5">
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                                    project size
+                                </h3>
+                                <SizePill size={project.size} verbose={false} />
+                            </div>
+                        </div>
                         <div className="rounded-2xl border border-border bg-card p-5">
                             <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
                                 tech stack

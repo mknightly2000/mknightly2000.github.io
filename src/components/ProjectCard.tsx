@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import LanguageBar from "./LanguageBar";
 import TagPill from "./TagPill";
+import SizePill from "@/components/SizePill.tsx";
 
 interface Props {
     project: any;
@@ -46,6 +47,8 @@ const ProjectCard = ({ project, featured = false }: Props) => {
                 </div>
 
                 <div className="flex flex-wrap gap-1.5">
+                    <SizePill size={project.size} verbose={true} />
+                    <span className="text-muted-foreground/40">|</span>
                     {project.tech_stack?.slice(0, 4).map((t: string) => (
                         <TagPill key={t}>{t}</TagPill>
                     ))}
